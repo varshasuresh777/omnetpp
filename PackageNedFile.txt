@@ -1,0 +1,128 @@
+
+package experiment;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import inet.common.misc.ThruputMeteringChannel;
+import inet.node.ethernet.Eth100M;
+import inet.node.inet.Router;
+import inet.node.inet.StandardHost;
+@license(LGPL);
+network experiment
+{
+    parameters:
+        double edgeDatarate @unit(bps);
+        double coreDatarate @unit(bps);
+        @display("bgb=1217.7825,387.585");
+    types:
+        channel edgeline extends ThruputMeteringChannel
+        {
+            delay = 2ms;
+            datarate = edgeDatarate;
+            thruputDisplayFormat = "b B U";
+        }
+        channel coreline extends ThruputMeteringChannel
+        {
+            delay = 2ms;
+            datarate = coreDatarate;
+            thruputDisplayFormat = "b B U";
+
+        }
+    submodules:
+        R0: Router {
+            @display("p=148.335,155.5125");
+            gates:
+                ethg[1];
+
+        }
+        R1: Router {
+            @display("p=302.1975,45.7875");
+
+        }
+        R2: Router {
+            @display("p=242.67375,280.83");
+
+        }
+        R4: Router {
+            @display("p=518.925,45.7875");
+
+        }
+        R5: Router {
+            @display("p=958.485,45.7875");
+
+        }
+        R6: Router {
+            @display("p=949.3275,302.1975");
+
+        }
+        R7: Router {
+            @display("p=1008.85126,161.7825");
+            gates:
+                ethg[1];
+
+        }
+        H1: StandardHost {
+            @display("p=49,153");
+            gates:
+                ethg[1];
+
+        }
+        H2: StandardHost {
+            @display("p=1137.0563,161.7825");
+            gates:
+                ethg[1];
+
+        }
+        configurator: Ipv4NetworkConfigurator {
+            @display("p=47.85,46.65375");
+
+        }
+        R8: Router {
+            @display("p=534.1875,280.83");
+        }
+        R3: Router {
+            @display("p=361.72125,161.7825");
+        }
+        R9: Router {
+            @display("p=811.96497,51.892498");
+        }
+        R11: Router {
+            @display("p=627.28876,190.78125");
+        }
+        R10: Router {
+            @display("p=666.97125,51.892498");
+        }
+        R13: Router {
+            @display("p=833.3325,238.095");
+        }
+        R12: Router {
+            @display("p=492.97876,161.7825");
+        }
+        R14: Router {
+            @display("p=753.96747,280.83");
+        }
+    connections:
+        //Between hosts and routers
+        H1.ethg[0] <--> Eth100M <--> R0.ethg[0];
+        H2.ethg[0] <--> Eth100M <--> R7.ethg[0];
+        //Between routers
+        R0.pppg++ <--> edgeline <--> R1.pppg++;
+        R0.pppg++ <--> edgeline <--> R2.pppg++;
+        R1.pppg++ <--> coreline <--> R2.pppg++;
+        R5.pppg++ <--> coreline <--> R7.pppg++;
+        R6.pppg++ <--> edgeline <--> R7.pppg++;
+        R5.pppg++ <--> edgeline <--> R6.pppg++;
+        R9.pppg++ <--> edgeline <--> R5.pppg++;
+        R3.pppg++ <--> edgeline <--> R8.pppg++;
+        R8.pppg++ <--> edgeline <--> R3.pppg++;
+        R3.pppg++ <--> edgeline <--> R1.pppg++;
+        R2.pppg++ <--> edgeline <--> R3.pppg++;
+        R6.pppg++ <--> edgeline <--> R9.pppg++;
+        R4.pppg++ <--> edgeline <--> R3.pppg++;
+        R4.pppg++ <--> coreline <--> R11.pppg++;
+        R8.pppg++ <--> edgeline <--> R12.pppg++;
+        R12.pppg++ <--> coreline <--> R10.pppg++;
+        R13.pppg++ <--> edgeline <--> R10.pppg++;
+        R10.pppg++ <--> edgeline <--> R14.pppg++;
+        R11.pppg++ <--> coreline <--> R10.pppg++;
+        R9.pppg++ <--> edgeline <--> R14.pppg++;
+        R13.pppg++ <--> edgeline <--> R9.pppg++;
+}
